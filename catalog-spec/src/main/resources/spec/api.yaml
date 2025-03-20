@@ -1,0 +1,107 @@
+openapi: 3.0.4
+info:
+  title: Catalog Service
+  description: Allows users to manage products and campaigns
+  license:
+    name: "Apache 2.0"
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+  version: 0.0.1
+
+servers:
+  - url: http://localhost:8080
+    description: Localhost
+
+paths:
+  /product/{id}:
+    get:
+      tags:
+        - "products"
+      summary: Returns a a product.
+      description: Returns the full data of the product with the given id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "404":
+          description: No product found with provided id
+        "200":
+          description: The requested product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+    put:
+      tags:
+        - "products"
+      summary: Creates or updates a product
+      description: Creates or updates the product with the given Id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        "201":
+          description: Product successfully created
+        "200":
+          description: Product successfully updated
+        "400":
+          description: The Product data was not valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+components:
+  schemas:
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: integer
+        discounts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Discount"
+    Discount:
+      type: object
+      required:
+        - rate
+        - startDate
+      properties:
+        rate:
+          description: the discount rate
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+        startDate:
+          description: the date and time when the discount starts
+          type: string
+          format: date-time
+        endDate:
+          description: the date and time when the discount is no longer valid (optional)
+          type: string
+          format: date-time
