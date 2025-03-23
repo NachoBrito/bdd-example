@@ -16,7 +16,7 @@ paths:
     get:
       tags:
         - "products"
-      summary: Returns a a product.
+      summary: Returns a product.
       description: Returns the full data of the product with the given id
       parameters:
         - name: id
@@ -64,6 +64,21 @@ paths:
                 properties:
                   error:
                     type: string
+    delete:
+      tags:
+        - "products"
+      summary: Removes a product.
+      description: Removes the product identified by the given id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The response was successful, no additional information provided.
+
 components:
   schemas:
     Product:

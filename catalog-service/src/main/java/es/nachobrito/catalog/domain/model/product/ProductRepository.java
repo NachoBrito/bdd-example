@@ -36,4 +36,10 @@ public interface ProductRepository {
      * @param product the product
      */
     void save(Product product);
+
+    /**
+     * Removes the product with the given id
+     * @param id the Product id
+     */
+    void delete(ProductId id);
 }

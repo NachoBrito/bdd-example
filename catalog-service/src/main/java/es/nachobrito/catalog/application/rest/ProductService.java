@@ -56,4 +56,8 @@ public class ProductService {
         
         return entity;
     }
+
+    public void delete(String id) {
+        repository.delete(new ProductId(id));
+    }
 }

@@ -17,7 +17,6 @@
 package es.nachobrito.catalog.infrastructure.datastore.inmemory;
 
 import es.nachobrito.catalog.domain.model.product.ProductMother;
-import es.nachobrito.catalog.domain.model.product.ProductId;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,11 +24,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class InMemoryProductRepositoryTest {
 
     @Test
-    void expectNewProductStored()
+    void expectProductsLifecycleHandled()
     {
         var store = new InMemoryProductRepository();
-        assertTrue(store.get(new ProductId("id")).isEmpty());
         var createdProduct = ProductMother.random();
+
+        assertTrue(store.get(createdProduct.getId()).isEmpty());
 
         store.save(createdProduct);
 
@@ -37,6 +37,11 @@ class InMemoryProductRepositoryTest {
         assertTrue(storedProduct.isPresent());
 
         assertEquals(createdProduct, storedProduct.get());
+
+        store.delete(createdProduct.getId());
+        assertTrue(store.get(createdProduct.getId()).isEmpty());
+
     }
+
 
 }

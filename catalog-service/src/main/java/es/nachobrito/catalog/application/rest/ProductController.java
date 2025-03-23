@@ -46,4 +46,12 @@ public class ProductController implements ProductsApi {
 
         return isNew ? HttpResponse.created(URI.create("/product/%s".formatted(productEntity.getId().value()))) : HttpResponse.ok();
     }
+
+
+    @Override
+    public HttpResponse<Void> productIdDelete(String id) {
+        service.delete(id);
+        return HttpResponse.noContent();
+    }
+
 }

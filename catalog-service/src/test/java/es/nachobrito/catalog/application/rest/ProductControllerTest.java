@@ -22,7 +22,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
 class ProductControllerTest {
@@ -60,5 +60,20 @@ class ProductControllerTest {
         productsClient.productIdPut(restProduct.getId(), restProduct);
         var returnedProduct = productsClient.productIdGet(restProduct.getId());
         assertEquals(restProduct, returnedProduct);
+    }
+
+    @Test
+    void expectProductDeleted() {
+        var product = ProductMother.random();
+        var restProduct = ProductMapper.from(product);
+
+        var createResponse = productsClient.productIdPut(restProduct.getId(), restProduct);
+        assertEquals(201, createResponse.code());
+        assertNotNull(productsClient.productIdGet(restProduct.getId()));
+
+        var deleteResponse = productsClient.productIdDelete(product.getId().value());
+        assertEquals(204, deleteResponse.code());
+
+        assertNull(productsClient.productIdGet(restProduct.getId()));
     }
 }

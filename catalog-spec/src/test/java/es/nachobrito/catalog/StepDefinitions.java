@@ -20,6 +20,7 @@ import es.nachobrito.catalog.application.invoker.ApiException;
 import es.nachobrito.catalog.application.model.Product;
 import es.nachobrito.catalog.application.rest.ProductsApi;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -66,6 +67,15 @@ public class StepDefinitions {
 
   @And("The product price is {int}")
   public void theProductPriceIs(int price) {
-    assertThat(productFound).extracting("name").isEqualTo(price);
+    assertThat(productFound).extracting("price").isEqualTo(price);
+  }
+
+  @After
+  public void cleanup() throws ApiException {
+    if(productCreated != null)
+    {
+      var response = productsApi.productIdDeleteWithHttpInfo(productCreated.getId());
+      assertThat(response.getStatusCode()).isEqualTo(204);
+    }
   }
 }
