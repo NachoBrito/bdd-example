@@ -14,24 +14,10 @@
  *    limitations under the License.
  */
 
-package es.nachobrito;
+package es.nachobrito.catalog.es.nachobrito.catalog.application.rest;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import es.nachobrito.catalog.application.rest.ProductsApi;
 
-import jakarta.inject.Inject;
-
-@MicronautTest
-class CatalogTest {
-
-    @Inject
-    EmbeddedApplication<?> application;
-
-    @Test
-    void testItWorks() {
-        Assertions.assertTrue(application.isRunning());
-    }
-
+@io.micronaut.http.client.annotation.Client("/")
+public interface ProductsClient extends ProductsApi {
 }

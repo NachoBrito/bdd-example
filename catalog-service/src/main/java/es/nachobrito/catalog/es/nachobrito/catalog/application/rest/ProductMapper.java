@@ -14,24 +14,17 @@
  *    limitations under the License.
  */
 
-package es.nachobrito;
+package es.nachobrito.catalog.es.nachobrito.catalog.application.rest;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import es.nachobrito.catalog.application.rest.model.Product;
 
-import jakarta.inject.Inject;
+public class ProductMapper {
 
-@MicronautTest
-class CatalogTest {
-
-    @Inject
-    EmbeddedApplication<?> application;
-
-    @Test
-    void testItWorks() {
-        Assertions.assertTrue(application.isRunning());
+    static Product from(es.nachobrito.catalog.es.nachobrito.catalog.domain.model.product.Product productEntity){
+        var product = new Product(productEntity.getId().value(), productEntity.getName().value(), productEntity.getPrice().cents());
+        if(productEntity.getDescription().isPresent()){
+            product.setDescription(productEntity.getDescription().get().value());
+        }
+        return product;
     }
-
 }

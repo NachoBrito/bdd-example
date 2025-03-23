@@ -14,24 +14,22 @@
  *    limitations under the License.
  */
 
-package es.nachobrito;
+package es.nachobrito.catalog.es.nachobrito.catalog.domain.model.product;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import java.util.UUID;
 
-import jakarta.inject.Inject;
-
-@MicronautTest
-class CatalogTest {
-
-    @Inject
-    EmbeddedApplication<?> application;
-
-    @Test
-    void testItWorks() {
-        Assertions.assertTrue(application.isRunning());
+/**
+ * Product id value object
+ * @param value
+ */
+public record ProductId(String value) {
+    public ProductId {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Id cannot be empty");
+        }
     }
 
+    public static ProductId createUnique(){
+        return new ProductId(UUID.randomUUID().toString());
+    }
 }

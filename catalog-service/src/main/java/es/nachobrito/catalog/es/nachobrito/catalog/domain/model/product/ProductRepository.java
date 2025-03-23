@@ -14,24 +14,26 @@
  *    limitations under the License.
  */
 
-package es.nachobrito;
+package es.nachobrito.catalog.es.nachobrito.catalog.domain.model.product;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+import java.util.Optional;
 
-import jakarta.inject.Inject;
+/**
+ * Represents a Product store.
+ */
+public interface ProductRepository {
 
-@MicronautTest
-class CatalogTest {
+    /**
+     * Finds a product by its id
+     * @param id the id to search for
+     * @return the Product, if any
+     */
+    Optional<Product> get(ProductId id);
 
-    @Inject
-    EmbeddedApplication<?> application;
-
-    @Test
-    void testItWorks() {
-        Assertions.assertTrue(application.isRunning());
-    }
-
+    /**
+     * Saves the provided product. If a product is already stored with the given id, it's updated.
+     *
+     * @param product the product
+     */
+    void save(Product product);
 }

@@ -14,24 +14,24 @@
  *    limitations under the License.
  */
 
-package es.nachobrito;
+package es.nachobrito.catalog.es.nachobrito.catalog.domain.model.product;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
+/**
+ * Product name value object
+ * @param value
+ */
+public record ProductName(String value) {
+    static final int MIN_LENGTH = 2;
+    static final int MAX_LENGTH = 100;
 
-import jakarta.inject.Inject;
+    public ProductName {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Name cannot be empty");
+        }
 
-@MicronautTest
-class CatalogTest {
-
-    @Inject
-    EmbeddedApplication<?> application;
-
-    @Test
-    void testItWorks() {
-        Assertions.assertTrue(application.isRunning());
+        var length = value.length();
+        if (length < MIN_LENGTH || length > MAX_LENGTH) {
+            throw new IllegalArgumentException("Name size must be between %d and %d".formatted(MIN_LENGTH, MAX_LENGTH));
+        }
     }
-
 }

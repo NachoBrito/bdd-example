@@ -14,24 +14,18 @@
  *    limitations under the License.
  */
 
-package es.nachobrito;
+package es.nachobrito.catalog.es.nachobrito.catalog.domain.model.product;
 
-import io.micronaut.runtime.EmbeddedApplication;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions;
 
-import jakarta.inject.Inject;
+import static org.junit.jupiter.api.Assertions.*;
 
-@MicronautTest
-class CatalogTest {
-
-    @Inject
-    EmbeddedApplication<?> application;
+class ProductIdTest {
 
     @Test
-    void testItWorks() {
-        Assertions.assertTrue(application.isRunning());
+    void expectExceptionIfValueEmpty(){
+        assertThrows(IllegalArgumentException.class, () -> new ProductId(null));
+        assertThrows(IllegalArgumentException.class, () -> new ProductId(""));
     }
 
 }
