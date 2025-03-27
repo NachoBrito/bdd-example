@@ -24,7 +24,7 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import org.assertj.core.api.Assertions;
+import io.cucumber.java.en.When;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,8 +42,7 @@ public class StepDefinitions {
         .isEqualTo(404);
   }
 
-  @And("I create a product with")
-  public void iCreateAProductWith(DataTable datatable) throws ApiException {
+  private void putProduct(DataTable datatable) throws ApiException {
     var map = datatable.asMaps().stream().findFirst().orElseThrow();
     productCreated = new Product();
     productCreated.setId(map.get("id"));
@@ -77,5 +76,22 @@ public class StepDefinitions {
       var response = productsApi.productIdDeleteWithHttpInfo(productCreated.getId());
       assertThat(response.getStatusCode()).isEqualTo(204);
     }
+  }
+
+  @Given("A product exists with")
+  public void aProductExistsWith(DataTable datatable) throws ApiException {
+    putProduct(datatable);
+  }
+
+  @And("I call the service with")
+  public void iCallTheServiceWith(DataTable datatable) throws ApiException {
+    putProduct(datatable);
+  }
+
+  @When("I delete the product with id {string}")
+  public void iDeleteTheProductWithId(String id) throws ApiException {
+    var response = productsApi.productIdDeleteWithHttpInfo(id);
+    assertThat(response.getStatusCode()).isEqualTo(204);
+
   }
 }
