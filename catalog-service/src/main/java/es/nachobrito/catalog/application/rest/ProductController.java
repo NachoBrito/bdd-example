@@ -39,12 +39,18 @@ public class ProductController implements ProductsApi {
     }
 
     @Override
-    public HttpResponse<Void> productIdPut(String id, Product product) {
+    public HttpResponse<String> productIdPut(String id, Product product) {
         var isNew = !service.exists(id);
+        try
+        {
+            var productEntity = service.save(product);
+            return isNew ? HttpResponse.created(URI.create("/product/%s".formatted(productEntity.getId().value()))) : HttpResponse.ok();
+        }
+        catch(IllegalArgumentException illegalArgumentException)
+        {
+            return HttpResponse.badRequest(illegalArgumentException.getMessage());
+        }
 
-        var productEntity = service.save(product);
-
-        return isNew ? HttpResponse.created(URI.create("/product/%s".formatted(productEntity.getId().value()))) : HttpResponse.ok();
     }
 
 

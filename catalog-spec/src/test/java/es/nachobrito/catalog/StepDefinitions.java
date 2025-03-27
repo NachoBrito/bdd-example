@@ -16,7 +16,11 @@
 
 package es.nachobrito.catalog;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import es.nachobrito.catalog.application.invoker.ApiException;
+import es.nachobrito.catalog.application.invoker.ApiResponse;
 import es.nachobrito.catalog.application.model.Product;
 import es.nachobrito.catalog.application.rest.ProductsApi;
 import io.cucumber.datatable.DataTable;
@@ -25,15 +29,14 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import java.util.Optional;
 
 public class StepDefinitions {
 
   private final ProductsApi productsApi = new ProductsApi();
 
   private Product productCreated, productFound;
+  private int responseCode;
 
   @Given("There is no product with id {string}")
   public void thereIsNoProductWithId(String id) {
@@ -42,21 +45,30 @@ public class StepDefinitions {
         .isEqualTo(404);
   }
 
-  private void putProduct(DataTable datatable) throws ApiException {
+  private void putProduct(DataTable datatable)  {
     var map = datatable.asMaps().stream().findFirst().orElseThrow();
     productCreated = new Product();
-    productCreated.setId(map.get("id"));
+    productCreated.setId(Optional.ofNullable(map.get("id")).orElse(""));
     productCreated.setName(map.get("name"));
-    productCreated.setPrice(Integer.valueOf(map.get("price")));
+    productCreated.setPrice(Optional.ofNullable(map.get("price")).map(Integer::valueOf).orElse(0));
 
-    var response = productsApi.productIdPutWithHttpInfo(productCreated.getId(), productCreated);
-    assertThat(response.getStatusCode() == 201);
+      try {
+          var response = productsApi.productIdPutWithHttpInfo(productCreated.getId(), productCreated);
+          responseCode = response.getStatusCode();
+      } catch (ApiException e) {
+          responseCode = e.getCode();
+      }
   }
 
   @Then("A product exists with id {string}")
-  public void aProductExistsWithId(String id) throws ApiException {
-    productFound = productsApi.productIdGet(id);
+  public void aProductExistsWithId(String id) {
+      try {
+          productFound = productsApi.productIdGet(id);
+      } catch (ApiException e) {
+        this.responseCode = e.getCode();
+      }
     assertThat(productFound).isNotNull();
+
   }
 
   @And("The product name is {string}")
@@ -70,11 +82,13 @@ public class StepDefinitions {
   }
 
   @After
-  public void cleanup() throws ApiException {
+  public void cleanup() {
     if(productCreated != null)
     {
-      var response = productsApi.productIdDeleteWithHttpInfo(productCreated.getId());
-      assertThat(response.getStatusCode()).isEqualTo(204);
+        try {
+            productsApi.productIdDeleteWithHttpInfo(productCreated.getId());
+        } catch (ApiException ignored) {
+        }
     }
   }
 
@@ -89,9 +103,19 @@ public class StepDefinitions {
   }
 
   @When("I delete the product with id {string}")
-  public void iDeleteTheProductWithId(String id) throws ApiException {
-    var response = productsApi.productIdDeleteWithHttpInfo(id);
-    assertThat(response.getStatusCode()).isEqualTo(204);
+  public void iDeleteTheProductWithId(String id) {
+      ApiResponse<Void> response = null;
+      try {
+          response = productsApi.productIdDeleteWithHttpInfo(id);
+          responseCode = response.getStatusCode();
+      } catch (ApiException e) {
+        responseCode = e.getCode();
+      }
 
+  }
+
+  @Then("the response code is {int}")
+  public void theResponseCodeIs(int code) {
+    assertThat(responseCode).isEqualTo(code);
   }
 }
