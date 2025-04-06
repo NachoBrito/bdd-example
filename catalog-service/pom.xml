@@ -36,7 +36,7 @@
     <micronaut.runtime>netty</micronaut.runtime>
     <micronaut.aot.enabled>false</micronaut.aot.enabled>
     <micronaut.aot.packageName>es.nachobrito.aot.generated</micronaut.aot.packageName>
-    <exec.mainClass>es.nachobrito.Application</exec.mainClass>
+    <exec.mainClass>es.nachobrito.catalog.Application</exec.mainClass>
 
     <micronaut.openapi.generate.server>true</micronaut.openapi.generate.server>
     <micronaut.openapi.definition>../catalog-spec/src/main/resources/spec/api.yaml</micronaut.openapi.definition>

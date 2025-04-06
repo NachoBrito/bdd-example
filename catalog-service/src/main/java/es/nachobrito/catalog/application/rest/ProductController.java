@@ -39,7 +39,7 @@ public class ProductController implements ProductsApi {
     }
 
     @Override
-    public HttpResponse<String> productIdPut(String id, Product product) {
+    public HttpResponse<Void> productIdPut(String id, Product product) {
         var isNew = !service.exists(id);
         try
         {
@@ -48,7 +48,7 @@ public class ProductController implements ProductsApi {
         }
         catch(IllegalArgumentException illegalArgumentException)
         {
-            return HttpResponse.badRequest(illegalArgumentException.getMessage());
+            return HttpResponse.badRequest();
         }
 
     }
