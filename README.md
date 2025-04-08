@@ -39,3 +39,10 @@ mvn test
 
 Will execute both Unit and Integration tests.
 
+In order to run the Behavior Tests defined in the specification project, you need to run first this service with the command:
+
+```shell
+mvn mn:run
+```
+
+
