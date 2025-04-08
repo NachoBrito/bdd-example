@@ -17,7 +17,7 @@ will run the Behavior Tests against a service deployed on `http://localhost:8080
 
 ## catalog-service
 
-In [catalog-service](./catalog-service/) you will find the service implementation.
+In [catalog-service](./catalog-service/) you will find the service implementation. It is a [Micronaut](https://micronaut.io/) application that implements the interface defined in OpenAPI.
 
 ### Generate code from OpenAPI:
 
